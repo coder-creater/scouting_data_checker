@@ -85,7 +85,7 @@ for i in range(1, len(totals)):
         print("actuals "+str(actuals.at[i, actuals.columns[j]]))
         dn = (abs(totals.at[i, note_diff.columns[j]]-actuals.at[i, note_diff.columns[j]]))
         note_diff.at[i, note_diff.columns[j]] = dn
-    perc_match_total.append(pc)
+    perc_match_total.append(pc)  
     perc_match_diff.append(dpc)
     if pc == 1.0:
         hund_match.append(i)
