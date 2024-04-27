@@ -67,22 +67,10 @@ note_diff = pd.DataFrame(index=range(num_matches),columns=range(5))
 zero_df(note_diff)
 note_diff.columns = ['AutoAmps','AutoSpeaker','TeleopAmps','TeleopSpeaker','Sum']
 hund_match =[]
-print(len(totals.columns))
-print(len(actuals.columns))
-print(len(note_diff.columns))
-print(totals.columns[0])
-print(actuals.columns[0])
-print(totals.columns)
-print(actuals.columns)
 for i in range(1, len(totals)):
     pc = (totals.at[i, 'Sum'])/(actuals.at[i, 'Sum'])
     dpc = (abs(1.0-pc))
     for j in range(len(note_diff.columns)):
-        print(note_diff.columns[j])
-        print("j "+str(j))
-        print("i "+str(i))
-        print("totals "+str(totals.at[i, note_diff.columns[j]]))
-        print("actuals "+str(actuals.at[i, actuals.columns[j]]))
         dn = (abs(totals.at[i, note_diff.columns[j]]-actuals.at[i, note_diff.columns[j]]))
         note_diff.at[i, note_diff.columns[j]] = dn
     perc_match_total.append(pc)  
