@@ -7,7 +7,6 @@ df = pd.read_csv('cleaned_data.csv')
 pd.set_option('future.no_silent_downcasting', True)
 
 num_matches = int((len(df)+1)/6)
-print((len(df)+1)/6)
 red_totals = pd.DataFrame(index=range(num_matches+1),columns=range(4))
 red_totals.columns = ['AutoAmps','AutoSpeaker','TeleopAmps','TeleopSpeaker']
 blue_totals = pd.DataFrame(index=range(num_matches+1),columns=range(4))
@@ -53,26 +52,12 @@ red_actuals['Sum'] = red_actuals.sum(axis=1)
 blue_actuals['Sum'] = blue_actuals.sum(axis=1)
 red_note_diff = fn.note_diff(num_matches, red_totals, red_actuals)
 blue_note_diff = fn.note_diff(num_matches, blue_totals, blue_actuals)
-print(blue_totals)
-print(blue_actuals)
-print(blue_note_diff)
+
 
 red_stats = fn.stats(red_note_diff)
 blue_stats = fn.stats(blue_note_diff)
-
-print('red stats:')
-print(red_stats) 
-print("")
-print('blue stats')
-print(blue_stats)
 
 hblue = fn.hund_count(num_matches, blue_totals, blue_actuals, 'Sum')
 hred = fn.hund_count(num_matches, red_totals, red_actuals, 'Sum')
 hblue_spec = fn.hund_spec(num_matches, blue_totals, blue_actuals)
 hred_spec = fn.hund_spec(num_matches, red_totals, red_actuals)
-
-print("num red hundo: " + str(len(hred)) + " - red hundos: " + str(hred))
-print("num blue hundo: " + str(len(hblue)) + " - blue hundos: " + str(hblue))
-
-print("num red hundo spec: " + str(len(hred_spec)) + " - red hundo specs: " + str(hred_spec))
-print("num blue hundo spec: " + str(len(hblue_spec)) + " - blue hundo specs: " + str(hblue_spec))
