@@ -3,30 +3,11 @@ import requests as rq
 import numpy as np
 import functions as fn
 
-df = pd.read_csv('cleaned_data.csv') 
-pd.set_option('future.no_silent_downcasting', True)
-
+#setup
+df = pd.read_csv('csvs/cleaned_data.csv')
 num_matches = int((len(df)+1)/6)
-red_totals = pd.DataFrame(index=range(num_matches+1),columns=range(4))
-red_totals.columns = ['AutoAmps','AutoSpeaker','TeleopAmps','TeleopSpeaker']
-blue_totals = pd.DataFrame(index=range(num_matches+1),columns=range(4))
-blue_totals.columns = ['AutoAmps','AutoSpeaker','TeleopAmps','TeleopSpeaker']
 
-#sets all values of input df to be zero
-fn.zero_df(red_totals)
-fn.zero_df(blue_totals)
-
-#sets 'totals' df to be incremented values of all notes scored in match for a given goal (AutoAmp, AutoSpeaker, TeleopAmp, TeleopSpeaker)
-for i in range(len(df)):
-  match_num = df.at[i, "Match"]
-  for j in range(len(red_totals.columns)):
-    if(df.at[i, "Alliance"]=='red'):
-        red_totals.at[match_num, red_totals.columns[j]] += df.at[i, red_totals.columns[j]]
-    else:
-        blue_totals.at[match_num, blue_totals.columns[j]] += df.at[i, blue_totals.columns[j]]  
-red_totals['Sum'] = red_totals.sum(axis=1)
-blue_totals['Sum'] = blue_totals.sum(axis=1)
-
+#actuals
 red_actuals = pd.DataFrame(index=range(num_matches+1),columns=range(4))
 red_actuals.columns = ['AutoAmps','AutoSpeaker','TeleopAmps','TeleopSpeaker']
 
@@ -50,14 +31,30 @@ for i in range(1, len(red_actuals)):
 
 red_actuals['Sum'] = red_actuals.sum(axis=1)
 blue_actuals['Sum'] = blue_actuals.sum(axis=1)
-red_note_diff = fn.note_diff(num_matches, red_totals, red_actuals)
-blue_note_diff = fn.note_diff(num_matches, blue_totals, blue_actuals)
 
+#totals
+red_totals = pd.DataFrame(index=range(num_matches+1),columns=range(4))
+red_totals.columns = ['AutoAmps','AutoSpeaker','TeleopAmps','TeleopSpeaker']
+blue_totals = pd.DataFrame(index=range(num_matches+1),columns=range(4))
+blue_totals.columns = ['AutoAmps','AutoSpeaker','TeleopAmps','TeleopSpeaker']
 
-red_stats = fn.stats(red_note_diff)
-blue_stats = fn.stats(blue_note_diff)
+#sets all values of input df to be zero
+fn.zero_df(red_totals)
+fn.zero_df(blue_totals)
 
-hblue = fn.hund_count(num_matches, blue_totals, blue_actuals, 'Sum')
-hred = fn.hund_count(num_matches, red_totals, red_actuals, 'Sum')
-hblue_spec = fn.hund_spec(num_matches, blue_totals, blue_actuals)
-hred_spec = fn.hund_spec(num_matches, red_totals, red_actuals)
+#sets 'totals' df to be incremented values of all notes scored in match for a given goal (AutoAmp, AutoSpeaker, TeleopAmp, TeleopSpeaker)
+for i in range(len(df)):
+  match_num = df.at[i, "Match"]
+  for j in range(len(red_totals.columns)):
+    if(df.at[i, "Alliance"]=='red'):
+        red_totals.at[match_num, red_totals.columns[j]] += df.at[i, red_totals.columns[j]]
+    else:
+        blue_totals.at[match_num, blue_totals.columns[j]] += df.at[i, blue_totals.columns[j]]  
+red_totals['Sum'] = red_totals.sum(axis=1)
+blue_totals['Sum'] = blue_totals.sum(axis=1)
+
+#to csvs
+red_actuals.to_csv('csvs/red_actuals.csv')
+blue_actuals.to_csv('csvs/blue_actuals.csv')
+red_totals.to_csv('csvs/red_totals.csv')
+blue_totals.to_csv('csvs/blue_totals.csv')

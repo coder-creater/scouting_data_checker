@@ -41,12 +41,12 @@ def hund_count(num, df1, df2, col):
             hunds.append(i)
     return hunds
 
-def hund_spec(num, df1, df2):
+def hund_spec(num, df1, df2, col):
     hunds = []
     note_diff = pd.DataFrame(index=range(num),columns=range(len(df1.columns)))
     note_diff.columns = df1.columns
     for i in range(1, len(df1)):
-        if (df1.at[i,'Sum']==df2.at[i,'Sum']):
+        if (df1.at[i,col]==df2.at[i,col]):
             if ((df1.at[i, df1.columns[1]]==df2.at[i, df2.columns[1]]) and (df1.at[i, df1.columns[1]]==df2.at[i, df2.columns[1]]) and (df1.at[i, df1.columns[3]]==df2.at[i, df2.columns[3]]) and (df1.at[i, df1.columns[4]]==df2.at[i, df2.columns[4]])):
                 hunds.append(i)
     return hunds
@@ -56,7 +56,8 @@ def hund_spec(num, df1, df2):
 
 def stats(df):
         #creates a df for the final data, then averages, medians, and stds the values
-    final_data = pd.DataFrame(index=["AutoAmps",'AutoSpeaker','TeleopAmp','TeleopSpeaker','Total'],columns=['Avg','Med','STD'])
+    final_data = pd.DataFrame(index=range(len(df.columns)),columns=['Avg','Med','STD'])
+    final_data.index = df.columns
     for i in range(len(df.columns)):
         avg = np.mean(df[df.columns[i]])
         med = np.median(df[df.columns[i]])
