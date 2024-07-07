@@ -32,6 +32,20 @@ def note_diff(num_matches, df1, df2):
 
     return note_diff
 
+def percent_error(num_matches, df1, df2):
+    note_diff = pd.DataFrame(index=range(num_matches),columns=range(5))
+    zero_df(note_diff)
+    note_diff.columns = ['AutoAmps','AutoSpeaker','TeleopAmps','TeleopSpeaker','Sum']
+    for i in range(1, len(df1)):
+        for j in range(len(note_diff.columns)):
+            dn = (abs(df1.at[i, note_diff.columns[j]]-df2.at[i, note_diff.columns[j]]))
+            if df2.at[i, note_diff.columns[j]] == 0:
+                note_diff.at[i, note_diff.columns[j]] = dn*100
+            else:
+                note_diff.at[i, note_diff.columns[j]] = (dn/df2.at[i, note_diff.columns[j]])*100
+    
+    return note_diff
+
 def hund_count(num, df1, df2, col):
     hunds = []
     note_diff = pd.DataFrame(index=range(num),columns=range(len(df1.columns)))
@@ -59,11 +73,16 @@ def stats(df):
     final_data = pd.DataFrame(index=range(len(df.columns)),columns=['Avg','Med','STD'])
     final_data.index = df.columns
     for i in range(len(df.columns)):
-        avg = np.mean(df[df.columns[i]])
-        med = np.median(df[df.columns[i]])
-        std = np.std(df[df.columns[i]])
+        avg = round(np.mean(df[df.columns[i]]),3)
+        med = round(np.median(df[df.columns[i]]),3)
+        std = round(np.std(df[df.columns[i]]), 3)
         final_data.at[final_data.index[i],'Avg'] = avg
         final_data.at[final_data.index[i],'Med'] = med
         final_data.at[final_data.index[i],'STD'] = std
     
     return final_data
+
+red_actuals = pd.read_csv('csvs/red_actuals.csv') 
+blue_actuals = pd.read_csv('csvs/blue_actuals.csv')
+red_totals = pd.read_csv('csvs/red_totals.csv') 
+blue_totals = pd.read_csv('csvs/blue_totals.csv')

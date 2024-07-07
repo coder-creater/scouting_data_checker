@@ -57,9 +57,23 @@ def team_stats(team):
                 tnd.at[i, tnd.columns[j]] = blue_note_diff.at[t[i], tnd.columns[j]]
     return fn.stats(tnd)
 
-print(red_note_diff)
-print(fn.note_diff(num_matches, red_totals, red_actuals))
-print(team_stats(972))
+def al_notes_stats(color):
+    red_diff = fn.note_diff(num_matches, red_totals, red_actuals)
+    blue_diff = fn.note_diff(num_matches, blue_totals, blue_actuals)
+    if color == 'red':
+        return fn.stats(red_diff)
+    elif color == 'blue':
+        return fn.stats(blue_diff)
+
+def al_percent_stats(color):
+    red_diff = fn.percent_error(num_matches, red_totals, red_actuals)
+    blue_diff = fn.percent_error(num_matches, blue_totals, blue_actuals)
+    if color == 'red':
+        return fn.stats(red_diff)
+    elif color == 'blue':
+        return fn.stats(blue_diff)
+
+print(al_percent_stats('red'))
 
 
 #print(ac.df[(ac.df['TeamNumber']==1351) & (ac.df['Match']==3)].index.tolist()[0])
